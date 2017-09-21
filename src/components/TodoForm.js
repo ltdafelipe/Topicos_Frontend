@@ -6,6 +6,16 @@ Button, Modal, FormGroup, FormControl, ControlLabel
 
 class TodoForm extends Component{
 state = {};
+
+componentWillReceiveProps(nextProps){
+    const selectedTodo = nextProps.selectedTodo;
+    this.setState({
+        id: selectedTodo.id,
+        title: selectedTodo.title,
+        description: selectedTodo.description,
+
+    });
+}
     onTitleChange = (event) =>{
         this.setState({title: event.target.value});
     }
@@ -14,14 +24,14 @@ state = {};
     }
 
     onSave = () => {
-        const { title, description } = this.state;
+        const { id, title, description } = this.state;
 
         if(!title || !description){
 
             alert('Preencha o titulo e a descrição da tarefa.');
             return;
         }
-        this.props.onSave(title, description);
+        this.props.onSave(id, title, description);
     }
 render(){
    // const showForm = this.props.showForm;
@@ -31,7 +41,7 @@ render(){
 
     //const title = this.state.title;
    // const description = this.state.description;
-    const {title, description} = this.state;
+    const {id, title, description} = this.state;
 return (
     <Modal show={showForm} onHide={onClose}>
         <Modal.Header closeButton>
@@ -41,7 +51,7 @@ return (
                 <form>
                     <FormGroup>
                         <ControlLabel>#</ControlLabel>
-                        <FormControl value="" disabled/>
+                        <FormControl value={id} disabled/>
                         </FormGroup>
                     <FormGroup>
                         <ControlLabel>Titulo</ControlLabel>

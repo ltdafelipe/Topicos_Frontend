@@ -2,21 +2,31 @@ import React, { Component } from 'react';
 
 import {
     Table, Button,
-    ButtonGroup
+    ButtonGroup, ButtonToolbar, ToggleButton, ToggleButtonGroup
 } from 'react-bootstrap';
-
+import moment from 'moment';
 class TodoTable extends Component {
 
      renderTodo = () => {
-        const { todos, onEditarClick, onExcluirClick} = this.props;
+        const { todos, onEditarClick, onExcluirClick, onConcluidaChange} = this.props;
 
         const todosComponents = todos.map((todo, index) => {
             return (
                 <tr>
                     <td>{todo.id}</td>
                     <td>{todo.title}</td>
-                    <td>{todo.date}</td>
+                    <td>{moment(todo.creation_date).format('DD/MM/YYYY [às] HH:mm')}</td>
                     <td>{todo.completed}</td>
+                   <td>
+                       <ButtonToolbar >
+                           <ToggleButtonGroup bsSize="small" type="radio" 
+                           onChange={(concluida) => onConcluidaChange(todo.id, concluida)}
+                           name="completed" value={todo.completed}>
+                           <ToggleButton value={true}>Concluida</ToggleButton>
+                           <ToggleButton value={false}>Pendente</ToggleButton>
+                           </ToggleButtonGroup>
+                           </ButtonToolbar>
+                           </td>
                     <td>
                         <ButtonGroup bsSize="small">
                             <Button bsStyle="warning" onClick={() => onEditarClick(todo)}>

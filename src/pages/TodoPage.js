@@ -102,6 +102,22 @@ putTodo = (id, data) => {
         })
     }
 
+    onConcluidaChange = (todoId, concluida) => {
+        let method;
+        if (concluida) {
+            method = axios.put;
+        } else {
+            method = axios.delete;
+        }
+        method(`http://localhost:3001/todos/${todoId}/completed`)
+        .then(response => {
+            if (response.status === 204) {
+                return this.getTodos();
+            }
+        }).catch(ex => {
+            console.error(ex, ex.response);
+        });
+    }
     render() {
         const todos = this.state.todos;
         const showForm = this.state.showForm;
@@ -115,7 +131,9 @@ putTodo = (id, data) => {
                     Nova Tarefa</Button>
                <TodoTable todos={todos}
                onEditarClick={this.onEditarClick}
-               onExcluirClick={this.onExcluirClick} />
+               onExcluirClick={this.onExcluirClick} 
+               onConcluidaChange={this.onConcluidaChange}/>
+
 
                 <TodoForm showForm={showForm}
                     onClose={this.onFormClose}

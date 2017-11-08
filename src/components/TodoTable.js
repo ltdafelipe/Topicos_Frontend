@@ -16,7 +16,7 @@ class TodoTable extends Component {
                     <td>{todo.id}</td>
                     <td>{todo.title}</td>
                     <td>{moment(todo.creation_date).format('DD/MM/YYYY [às] HH:mm')}</td>
-                    <td>{todo.completed}</td>
+                   
                    <td>
                        <ButtonToolbar >
                            <ToggleButtonGroup bsSize="small" type="radio" 

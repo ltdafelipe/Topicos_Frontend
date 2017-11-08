@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import axios from 'axios';
 import {
-    Button,
+    Button, FormGroup, InputGroup, FormControl,
     
 } from 'react-bootstrap';
 
@@ -10,15 +10,21 @@ import TodoForm from '../components/TodoForm';
 import TodoTable from '../components/TodoTable';
 class TodoPage extends Component {
     state = {
-        todos: []
+        todos: [],
+        busca: '',
+        selectedTodo: {}
     }
     componentDidMount() {
         this.getTodos();
     }
 
     getTodos = () => {
-        return axios.get('http://localhost:3001/todos')
-            .then((response) => {
+        return axios.get('http://localhost:3001/todos',  {
+            params: {
+                busca: this.state.busca
+            }
+        
+            }).then((response) => {
                 console.log(response);
                 this.setState({
                     todos: response.data
@@ -27,6 +33,7 @@ class TodoPage extends Component {
                 console.error(error);
             })
     }
+    
     onExcluirClick = (todo) => {
         const confirm =
             window.confirm("Deseja excluir a tarefa " + todo.id + "?");
@@ -118,14 +125,34 @@ putTodo = (id, data) => {
             console.error(ex, ex.response);
         });
     }
+
+    onBuscaChange = (event) => {
+        this.setState({
+            busca: event.target.value
+        }, () => {
+            clearTimeout(this.buscaTimeout);
+           this.buscaTimeout = setTimeout(() => {
+            this.getTodos();
+            }, 1000);
+           
+        });
+    }
+
     render() {
-        const todos = this.state.todos;
+        const {todos, busca} = this.state;
         const showForm = this.state.showForm;
 
         return (
             <section>
                 <h1>Página de Tarefas</h1>
 
+        <FormGroup>
+            <InputGroup>
+                <InputGroup.Addon>Busca</InputGroup.Addon>
+                 <FormControl type="text" placeholder="Titulo ou Descrição"
+                    onChange={this.onBuscaChange} value={busca} />
+             </InputGroup>
+         </FormGroup>
                 <Button bsSize="small" bsStyle="success"
                     onClick={this.onNewTodoClick}>
                     Nova Tarefa</Button>
